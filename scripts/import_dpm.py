@@ -84,7 +84,7 @@ def main() -> None:
     if start < 0 or stop < 0 or stop - start > 1600:
         raise ValueError("Unable to isolate auth startup; abort")
     offline_startup = """(function dpmOfflineBootstrap(){
-      window.cloudNoSeed=false;
+      window.cloudNoSeed=!!localStorage.getItem('dailysfm-eacs-local-owner-v1');
       window.DailySFM={mode:'offline',original:'DailyPerformanceManagement/DPM'};
       ǀhc='dailysfm-local';ǀh8=ǀhc;ǀh5='leader';ǀhf=false;ǀhg=false;ǀhh=false;
       ǀh7='MAIN';ǀh4=['MAIN'];ǀhi=['MAIN'];
@@ -106,6 +106,14 @@ def main() -> None:
     html = html.replace(
         "<body>",
         """<body><div id="dpmOfflineNotice" role="status" style="position:fixed;bottom:12px;left:12px;z-index:99999;background:#064b4b;color:#fff;border:1px solid #49a6a4;border-radius:9px;padding:9px 14px;font:600 12px/1.45 system-ui;box-shadow:0 5px 22px #0003">Original DPM · unabhängige Offline-Kopie · keine B+K-Verbindung · <a href="six-sigma.html" style="color:#c9ffeb;text-decoration:underline">Six Sigma Studio</a></div>""",
+        1
+    )
+    # Use ONLY the EACS frontend client for authenticated cloud snapshots.
+    # The original DPM Supabase client is already replaced with the inert stub above.
+    html = html.replace(
+        "</body>",
+        '<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.81.1/dist/umd/supabase.js"></script>'
+        '<script src="dailysfm-eacs.js"></script></body>',
         1
     )
     html = html.replace("<title>KPI Cockpit", "<title>DailySFM · KPI Cockpit", 1)
