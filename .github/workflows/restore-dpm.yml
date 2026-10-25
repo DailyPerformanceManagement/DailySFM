@@ -1,0 +1,62 @@
+name: Restore original Claude DPM safely into DailySFM
+
+on:
+  push:
+    paths:
+      - ".github/workflows/restore-dpm.yml"
+      - "scripts/import_dpm.py"
+      - "scripts/smoke-test.cjs"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout DailySFM (never DPM)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Import pinned original Claude source with B+K removed
+        run: python3 scripts/import_dpm.py
+
+      - name: Verify browser scripts compile
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, subprocess, tempfile
+          source = Path("index.html").read_text(encoding="utf-8")
+          blocks = re.findall(r"<script(?: [^>]*)?>(.*?)</script>", source, flags=re.S)
+          for i, block in enumerate(blocks):
+              path = Path(tempfile.gettempdir()) / f"dailysfm-original-{i}.js"
+              path.write_text(block, encoding="utf-8")
+              subprocess.run(["node", "--check", str(path)], check=True)
+          print("PASS:", len(blocks), "inline script blocks compile")
+          PY
+
+      - name: Install headless browser
+        run: |
+          npm install --no-save --ignore-scripts playwright
+          npx playwright install --with-deps chromium-headless-shell
+
+      - name: Verify original cockpit renders without B+K requests
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/dailysfm-http.log 2>&1 &
+          sleep 2
+          node scripts/smoke-test.cjs
+
+      - name: Publish verified original to independent DailySFM only
+        run: |
+          git config user.name "DailySFM import bot"
+          git config user.email "dailysfm-import@users.noreply.github.com"
+          git add index.html projekte.html hilfe/
+          if git diff --cached --quiet; then
+            echo "Original copy already up to date"
+          else
+            git commit -m "Replace prototype with verified original Claude DPM offline copy"
+            git push origin HEAD:main
+          fi
