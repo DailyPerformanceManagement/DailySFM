@@ -6,6 +6,10 @@ on:
       - ".github/workflows/restore-dpm.yml"
       - "scripts/import_dpm.py"
       - "scripts/smoke-test.cjs"
+      - "scripts/eacs-smoke.cjs"
+      - "dailysfm-eacs.js"
+      - "six-sigma.js"
+      - "six-sigma.html"
   workflow_dispatch:
 
 concurrency:
@@ -52,6 +56,15 @@ jobs:
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/dailysfm-http.log 2>&1 &
           sleep 2
           node scripts/smoke-test.cjs
+
+      - name: Validate EACS frontend scripts
+        run: |
+          node --check dailysfm-eacs.js
+          node --check six-sigma.js
+          node --check scripts/eacs-smoke.cjs
+
+      - name: Exercise mocked EACS KPI and Six Sigma saving in browser
+        run: node scripts/eacs-smoke.cjs
 
       - name: Publish verified original to independent DailySFM only
         run: |
