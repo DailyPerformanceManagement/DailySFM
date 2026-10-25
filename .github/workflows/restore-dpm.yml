@@ -8,6 +8,10 @@ on:
       - "scripts/smoke-test.cjs"
   workflow_dispatch:
 
+concurrency:
+  group: dailysfm-original-clone
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -41,7 +45,7 @@ jobs:
       - name: Install headless browser
         run: |
           npm install --no-save --ignore-scripts playwright
-          npx playwright install --with-deps chromium-headless-shell
+          npx playwright install chromium-headless-shell
 
       - name: Verify original cockpit renders without B+K requests
         run: |
