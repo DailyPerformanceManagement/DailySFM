@@ -20,7 +20,7 @@ const { chromium } = require("playwright");
     const main = document.getElementById("main");
     return {
       title: document.title,
-      hasOriginalHeading: document.body.innerText.includes("Daily Performance Management"),
+      hasOriginalHeading: document.title.includes("KPI Cockpit") && !!document.getElementById("tbHealth"),
       appVisible: !!root && getComputedStyle(root).display !== "none",
       loginHidden: !!login && getComputedStyle(login).display === "none",
       mainVisible: !!main && main.getBoundingClientRect().width > 600,
