@@ -27,13 +27,14 @@ const { chromium } = require("playwright");
       displayedPage: document.getElementById("pageTitle")?.textContent || "",
       navCount: document.querySelectorAll("[data-nav]").length,
       offlineFlag: window.DailySFM?.mode === "offline",
+      hasSavedDemo: !!localStorage.getItem("dailysfm-original-offline-v1"),
     };
   });
   console.log("DPM Lab smoke result:", JSON.stringify(state));
   console.log("Browser errors:", JSON.stringify(errors.slice(0, 8)));
   console.log("Production requests:", productionRequests.length);
   if (!state.hasOriginalHeading || !state.appVisible || !state.loginHidden ||
-      !state.mainVisible || state.navCount < 5 || !state.offlineFlag ||
+      !state.mainVisible || state.navCount < 5 || !state.offlineFlag || !state.displayedPage || !state.hasSavedDemo ||
       errors.length || productionRequests.length) {
     await page.screenshot({ path: "dpm-lab-smoke-failure.png", fullPage: false });
     await browser.close();
