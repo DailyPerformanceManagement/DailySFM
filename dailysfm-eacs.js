@@ -13,45 +13,43 @@
   const banner = document.getElementById('dpmOfflineNotice');
   if (!banner) return;
 
-  banner.replaceChildren();
-  Object.assign(banner.style, {
-    display:'flex', flexWrap:'wrap', alignItems:'center', gap:'9px',
-    maxWidth:'calc(100vw - 28px)'
-  });
-  const title = document.createElement('strong');
-  title.textContent = 'DailySFM · EACS (Frankfurt)';
+  // The original intrusive bottom ribbon is now gone.
+  // Account and saving live quietly in the existing cockpit sidebar.
+  banner.style.display = 'none';
+  banner.hidden = true;
   const status = document.createElement('span');
   status.id = 'eacsSyncStatus';
-  status.textContent = 'EACS-Verbindung wird geprüft …';
+  status.textContent = 'EACS · Sitzung wird geprüft …';
+  status.setAttribute('role','status');
   status.setAttribute('aria-live','polite');
   const action = document.createElement('button');
   action.id = 'eacsAccount';
   action.type = 'button';
-  action.textContent = 'EACS Cloud (optional)';
-  Object.assign(action.style, {
-    border:'1px solid #a4f1de', borderRadius:'6px', color:'#043a3c',
-    background:'#d4fff1', padding:'5px 10px', cursor:'pointer', fontWeight:'700'
-  });
+  action.textContent = 'Konto';
   const syncButton = document.createElement('button');
   syncButton.id = 'eacsSave';
   syncButton.type = 'button';
-  syncButton.textContent = 'Jetzt speichern';
+  syncButton.textContent = 'Speichern';
   syncButton.hidden = true;
-  Object.assign(syncButton.style, {
-    border:'1px solid #a4f1de', borderRadius:'6px', color:'white',
-    background:'#186774', padding:'5px 10px', cursor:'pointer'
-  });
-  const sigma = document.createElement('a');
-  sigma.href = 'six-sigma.html';
-  sigma.textContent = 'Six Sigma Studio';
-  sigma.style.color = '#d9fff4';
-  sigma.style.textDecoration = 'underline';
-  banner.append(title, status, action, syncButton, sigma);
+  const nativeControls=document.createElement('div');
+  nativeControls.id='eacsNativeControls';
+  nativeControls.className='eacs-native-controls';
+  const controls=document.createElement('div');
+  controls.className='eacs-native-actions';
+  controls.append(action,syncButton);
+  nativeControls.append(status,controls);
+  (document.querySelector('.side-foot')||document.querySelector('#appRoot .side')||document.body).append(nativeControls);
+  const loading=document.createElement('div');
+  loading.id='eacsGateLoading';
+  loading.setAttribute('role','status');
+  loading.textContent='DailySFM · EACS-Anmeldung wird geprüft …';
+  loading.style.cssText='position:fixed;inset:0;z-index:2147483590;background:#0b1721;color:#e6f6f3;display:grid;place-items:center;font:600 17px system-ui';
+  document.body.append(loading);
 
   const state = {client:null, user:null, ready:false, fetching:false, writeChain:Promise.resolve(), timer:null};
   const show = (message, problem=false) => {
     status.textContent = message;
-    status.style.color = problem ? '#ffcfbd' : '#ffffff';
+    status.style.color = problem ? '#ffb8aa' : '#a7dacf';
   };
   const backup = (raw, reason) => {
     if (!raw) return;
@@ -72,7 +70,7 @@
   const setAccount = user => {
     state.user = user;
     state.ready = !!user;
-    action.textContent = user ? ('✓ ' + (user.email||'EACS-Konto')) : 'Cloud speichern (optional)';
+    action.textContent = user ? '✓ EACS Konto' : 'EACS anmelden';
     syncButton.hidden = !user;
   };
   const saveSnapshot = async snapshot => {
@@ -150,6 +148,8 @@
   };
   const enterUser = async user => {
     setAccount(user);
+    document.getElementById('eacsGate')?.remove();
+    document.getElementById('eacsGateLoading')?.remove();
     try {await loadFromEacs(user);}
     catch(error) {
       state.ready = false;
@@ -159,24 +159,27 @@
     }
   };
 
-  const openDialog = () => {
+  const openDialog = (required=false) => {
+    document.getElementById('eacsGate')?.remove();
     const cover = document.createElement('div');
-    cover.style.cssText = 'position:fixed;inset:0;background:#071520cb;z-index:2147483600;display:grid;place-items:center;padding:18px';
+    if(required) cover.id='eacsGate';
+    cover.style.cssText = 'position:fixed;inset:0;background:linear-gradient(140deg,#07131df1,#0b2935f2);backdrop-filter:blur(5px);z-index:2147483600;display:grid;place-items:center;padding:18px';
     const pane = document.createElement('section');
-    pane.style.cssText = 'background:#fff;color:#1b3442;border-radius:16px;max-width:410px;width:100%;padding:26px;font:14px/1.5 system-ui;box-shadow:0 18px 50px #0004';
+    pane.style.cssText = 'background:#142530;color:#f0f8fa;border:1px solid #335766;border-radius:16px;max-width:480px;width:100%;padding:30px;font:14px/1.65 system-ui;box-shadow:0 18px 50px #0006';
     const heading = document.createElement('h2');
-    heading.textContent = state.user ? 'EACS-Konto' : 'EACS Cloud-Speicherung (optional)';
+    heading.textContent = state.user ? 'DailySFM · Mein Konto' : 'Willkommen bei DailySFM';
     heading.style.margin = '0 0 12px';
     pane.append(heading);
     const info = document.createElement('p');
-    info.textContent = 'Zum Testen ist kein Login nötig. Nur für die Speicherung auf EACS benötigen Sie ein separates App-Login. Ihre originale B+K-Datenbank bleibt unberührt.';
+    info.textContent = 'Bitte melden Sie sich an, um Ihr Shopfloor-Board, Ihre KPI-Daten und Verbesserungsprojekte sicher in EACS zu öffnen. Kein neues Passwort nötig: Anmeldelink per E-Mail anfordern.';
     pane.append(info);
     const buttons = document.createElement('div');
     buttons.style.cssText = 'display:flex;gap:10px;margin-top:16px';
     const close = document.createElement('button');
     close.type='button'; close.textContent='Schließen';
     close.style.cssText = 'padding:10px 14px;border:1px solid #ced6db;border-radius:8px;background:#f1f5f6;cursor:pointer';
-    close.onclick = () => cover.remove();
+    close.onclick = () => {if(!required)cover.remove()};
+    if(required)close.hidden=true;
     const msg = document.createElement('p');
     msg.setAttribute('role','status');
     msg.style.cssText='font:12px/1.5 system-ui;color:#9a4719;min-height:18px';
@@ -204,7 +207,7 @@
       const magicForm = document.createElement('form');
       magicForm.style.cssText = 'display:grid;gap:9px;margin:14px 0';
       const magicLabel = document.createElement('label');
-      magicLabel.textContent = 'Ohne Passwort per E-Mail anmelden';
+      magicLabel.textContent = 'Anmeldung ohne Passwort';
       magicLabel.style.fontWeight = '700';
       const magicEmail = document.createElement('input');
       magicEmail.type = 'email';
@@ -240,7 +243,7 @@
       pane.append(magicForm);
       const advanced = document.createElement('details');
       const advancedSummary = document.createElement('summary');
-      advancedSummary.textContent = 'Alternativ: Mit E-Mail und Passwort anmelden';
+      advancedSummary.textContent = 'Weitere Anmeldeoptionen (E-Mail / Passwort)';
       advancedSummary.style.cssText = 'cursor:pointer;margin:12px 0;color:#486275';
       advanced.append(advancedSummary);
       const form = document.createElement('form');
@@ -282,11 +285,11 @@
     }
     pane.append(buttons);
     cover.append(pane);
-    cover.addEventListener('click',event=>{if(event.target===cover)cover.remove()});
+    cover.addEventListener('click',event=>{if(!required&&event.target===cover)cover.remove()});
     document.body.append(cover);
     if (!state.user) pane.querySelector('input')?.focus();
   };
-  action.addEventListener('click',openDialog);
+  action.addEventListener('click',()=>openDialog(false));
 
   try {
     if(!window.supabase?.createClient)throw new Error('Supabase JS SDK nicht geladen.');
@@ -297,7 +300,7 @@
     state.client.auth.getSession().then(async ({data,error})=>{
       if(error)throw error;
       if(data?.session?.user) await enterUser(data.session.user);
-      else {setAccount(null);show('Demo lokal · Login nur für Cloud-Speichern nötig');}
-    }).catch(error=>{console.error('DailySFM EACS auth:',error);show('EACS Auth nicht erreichbar: '+error.message,true)});
-  } catch(error) {console.error(error);show('EACS nicht erreichbar: '+error.message,true);action.disabled=true;}
+      else {setAccount(null);show('Nicht angemeldet');document.getElementById('eacsGateLoading')?.remove();openDialog(true);}
+    }).catch(error=>{console.error('DailySFM EACS auth:',error);show('EACS Auth nicht erreichbar: '+error.message,true);document.getElementById('eacsGateLoading')?.remove();openDialog(true);});
+  } catch(error) {console.error(error);show('EACS nicht erreichbar: '+error.message,true);action.disabled=true;document.getElementById('eacsGateLoading')?.remove();}
 })();
