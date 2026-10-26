@@ -41,7 +41,7 @@ async function createBrowser(){
    p1.on('pageerror',e=>errors.push(e.message));
    await c1.route('**/supabase.js',r=>r.fulfill({status:200,contentType:'application/javascript',body:mockSDK(false)}));
    await p1.goto('http://127.0.0.1:8765/',{waitUntil:'domcontentloaded'});
-   await p1.locator('#eacsGate input[type="email"]').waitFor({timeout:20000});
+   await p1.locator('#eacsGate input[type="email"]').first().waitFor({timeout:20000});
    if(await p1.locator('#dpmOfflineNotice').isVisible())throw Error('Old status banner remains visible');
    await p1.locator('#eacsGate input[type="email"]').first().fill('tester@example.invalid');
    await p1.locator('#eacsGate button[type="submit"]').first().click();
