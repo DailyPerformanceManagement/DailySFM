@@ -71,7 +71,10 @@
     function open(next) {
       setMode(next);
       if (!location.hash.startsWith('#/projekte'))location.hash='#/projekte';
-      else if (typeof window['ǀgr']==='function')window['ǀgr']();
+      // The original DPM router may not fire when the route was already active.
+      // Execute it once for the native project host, then restore our subtab.
+      if (typeof window['ǀgr']==='function')window['ǀgr']();
+      setTimeout(()=>{if(mode==='sigma')setMode('sigma');syncNav();},60);
       requestAnimationFrame(syncNav);
     }
     link.addEventListener('click',e=>{e.preventDefault();open('sigma')});
