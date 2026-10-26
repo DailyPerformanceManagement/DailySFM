@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08121b"><title>Six Sigma Studio · DailySFM Lab</title><link rel="stylesheet" href="./six-sigma.css"></head>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08121b"><title>Six Sigma &amp; PFMEA · DailySFM</title><link rel="stylesheet" href="./six-sigma.css"><link rel="stylesheet" href="./six-sigma-integrated.css"></head>
 <body><div id="app">
 <aside class="side">
- <a class="logo" href="/"><span class="logo-icon">↗</span><span><b>DAILY<span>SFM</span></b><small>LEAN · SIX SIGMA · EACS</small></span></a>
+ <a class="logo" href="./index.html"><span class="logo-icon">↗</span><span><b>DAILY<span>SFM</span></b><small>LEAN · SIX SIGMA · EACS</small></span></a>
  <div class="side-label">WORKSPACE</div>
  <a class="side-link" href="/">▧ &nbsp; KPI Cockpit</a>
- <a class="side-link selected" href="/six-sigma.html">∑ &nbsp; Six Sigma Studio</a>
+ <a class="side-link selected" href="./six-sigma.html">∑ &nbsp; Six Sigma Studio</a>
  <div class="side-label">TOOLS · DMAIC</div>
  <button class="side-link tool-nav" data-tool="describe">▤ &nbsp; Deskriptive Statistik</button>
  <button class="side-link tool-nav" data-tool="pareto">▥ &nbsp; Pareto-Analyse</button>
@@ -18,11 +18,11 @@
  <button class="side-link tool-nav" data-tool="capability">◎ &nbsp; Prozessfähigkeit</button>
  <button class="side-link tool-nav" data-tool="control">〽 &nbsp; I-MR Regelkarte</button>
  <button class="side-link tool-nav" data-tool="pfmea">⚑ &nbsp; PFMEA / Risikoanalyse</button>
- <div class="sidebar-footer"><span class="dot" id="sync-dot"></span><span id="sync-label">Lokaler Modus</span><p>Eigenständiger Bereich · EACS-Speicherung mit Anmeldung. Ihr B+K-Projekt bleibt unangetastet.</p></div>
+ <div class="sidebar-footer"><span class="dot" id="sync-dot"></span><span id="sync-label">Lokaler Modus</span><p>Eigenständiger Bereich · EACS-Speicherung mit Anmeldung. Six Sigma-Projekte sind von den KPI-Messungen getrennt.</p></div>
 </aside>
 <main class="main">
- <header class="topbar"><div class="breadcrumbs">OPERATIONS <span>/</span> SIX SIGMA STUDIO</div><div class="top-buttons"><span class="mode-pill" id="mode-pill">LOKAL</span><button class="btn outline" id="auth-btn">☁ EACS anmelden</button></div></header>
+ <header class="topbar"><div class="breadcrumbs">DAILY MANAGEMENT <span>/</span> KONTINUIERLICHE VERBESSERUNG</div><div class="top-buttons"><span class="mode-pill" id="mode-pill">LOKAL</span><button class="btn outline" id="auth-btn">☁ EACS anmelden</button></div></header>
  <div id="root" class="container"></div>
 </main></div>
 <div id="toast" role="status" aria-live="polite"></div>
-<script src="./six-sigma.js" defer></script></body></html>
+<script src="./six-sigma.js" defer></script><script src="./six-sigma-dpm-context.js" defer></script></body></html>
