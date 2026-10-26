@@ -15,3 +15,11 @@
 .dpm-analysis-shortcut{display:inline-flex;align-items:center;gap:7px;border:1px solid #287f8c!important;background:#123847!important;color:#95f0e0!important;font-size:12px!important;font-weight:700;cursor:pointer;border-radius:9px;padding:8px 12px!important;margin:10px 0 0}
 .dpm-analysis-shortcut:hover{filter:brightness(1.15)}
 @media(max-width:900px){.dpm-module-tabs{padding:14px}.dpm-module-switch{width:100%;justify-content:stretch}.dpm-module-switch button{flex:1;white-space:normal}#dpmSigmaFrame{height:calc(100vh - 210px);min-height:680px}}
+
+/* EACS account status within the original sidebar — no viewport overlay ribbon. */
+.eacs-native-controls{display:grid;gap:7px;margin:10px 0 0;padding:9px 5px 1px;border-top:1px solid #344a57}
+#eacsSyncStatus{display:block;max-width:100%;font-size:10px;line-height:1.5;color:#a7dacf;overflow-wrap:anywhere}
+.eacs-native-actions{display:flex;flex-wrap:wrap;gap:7px}
+.eacs-native-actions button{padding:7px 9px;font-size:11px;font-weight:700;border-radius:7px;border:1px solid #3c6970;color:#cfefe8;background:#173a41;cursor:pointer}
+.eacs-native-actions button:hover{background:#20505a}
+.eacs-native-actions button[hidden]{display:none!important}
