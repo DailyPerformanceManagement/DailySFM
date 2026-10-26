@@ -54,3 +54,7 @@ body.embedded .scroll{border-radius:9px}
 .dpm-interpretation .warning{color:#f4d28e}
 @media(max-width:1050px){.dpm-workflow{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){body.embedded .container{padding:12px}.dpm-sigma-intro{padding:13px}.dpm-workflow{grid-template-columns:repeat(2,minmax(0,1fr))}.dpm-workflow button{min-height:62px}}
+
+/* Align integrated introduction and DMAIC steps with the Studio panels. */
+body.embedded .dpm-sigma-intro,body.embedded .dpm-workflow,body.embedded .dpm-interpretation{margin-left:18px;margin-right:18px}
+@media(max-width:700px){body.embedded .dpm-sigma-intro,body.embedded .dpm-workflow,body.embedded .dpm-interpretation{margin-left:12px;margin-right:12px}}
