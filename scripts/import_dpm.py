@@ -116,6 +116,9 @@ def main() -> None:
         '<script src="dailysfm-eacs.js"></script></body>',
         1
     )
+    # Native navigation and account styling stay in separate, maintainable files.
+    html = html.replace("</head>", '<link rel="stylesheet" href="dailysfm-modules.css"></head>', 1)
+    html = html.replace("</body>", '<script src="dailysfm-modules.js"></script></body>', 1)
     html = html.replace("<title>KPI Cockpit", "<title>DailySFM · KPI Cockpit", 1)
     html = re.sub(r'<link rel="manifest" href="manifest\.webmanifest"\s*/>', "", html)
     html = re.sub(r'<link rel="icon" type="image/png" href="icons/icon-192\.png"\s*/>', "", html)
