@@ -1,0 +1,17 @@
+/* Scoped native integration: preserves original DPM styling and router. */
+#dpmOfflineNotice{display:none!important}
+#navSixSigma.on{background:#ffffff1a;color:#fff;box-shadow:inset 3px 0 0 var(--accent)}
+.dpm-module-tabs{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin:0 0 14px;padding:18px 20px;background:var(--card,#13212c);border:1px solid #304352;border-radius:13px}
+.dpm-module-copy{min-width:250px}
+.dpm-module-copy h2{font-size:20px;margin:4px 0;color:var(--text,#f4f8fc);font-weight:650;letter-spacing:-.25px}
+.dpm-module-copy p{font-size:12px;color:#a0b7c6;margin:4px 0 0}
+.dpm-module-label{font-size:10px;letter-spacing:1.2px;color:var(--accent,#3ccab0);font-weight:800}
+.dpm-module-switch{display:flex;gap:5px;padding:4px;background:#091923;border:1px solid #304352;border-radius:11px}
+.dpm-module-switch button{background:transparent;border:0;border-radius:8px;color:#a9bdca;font-size:12px;font-weight:700;padding:10px 13px;cursor:pointer;white-space:nowrap}
+.dpm-module-switch button[aria-selected="true"]{background:#245063;color:#fff;box-shadow:0 2px 6px #0003}
+.dpm-module-switch button:focus-visible{outline:2px solid #70e3ca;outline-offset:2px}
+#dpmSigmaFrame{display:block;width:100%;height:max(820px,calc(100vh - 185px));border:1px solid #304352;border-radius:12px;background:#101e29;color-scheme:dark}
+#dpmSigmaFrame[hidden],#projFrame[hidden]{display:none!important}
+.dpm-analysis-shortcut{display:inline-flex;align-items:center;gap:7px;border:1px solid #287f8c!important;background:#123847!important;color:#95f0e0!important;font-size:12px!important;font-weight:700;cursor:pointer;border-radius:9px;padding:8px 12px!important;margin:10px 0 0}
+.dpm-analysis-shortcut:hover{filter:brightness(1.15)}
+@media(max-width:900px){.dpm-module-tabs{padding:14px}.dpm-module-switch{width:100%;justify-content:stretch}.dpm-module-switch button{flex:1;white-space:normal}#dpmSigmaFrame{height:calc(100vh - 210px);min-height:680px}}
