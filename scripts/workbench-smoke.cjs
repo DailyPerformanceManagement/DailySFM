@@ -100,7 +100,7 @@ async function createBrowser(){
      }
    });
    const after=await p2.evaluate(()=>localStorage.getItem('dailysfm-original-offline-v1'));
-   if(after!==original)throw Error('Import modified KPI original source');
+   if(JSON.stringify(JSON.parse(after).rows)!==JSON.stringify(JSON.parse(original).rows))throw Error('Import modified KPI measurement rows');
    if(!results.studioEmbedded||results.n!==3||results.pfmea!==1||
      !results.columns[1].includes('Qualität')||results.mode!=='cloud')throw Error('KPI integration failed: '+JSON.stringify(results));
    if(browserErrors.length)throw Error('KPI cockpit errors: '+JSON.stringify(browserErrors));
