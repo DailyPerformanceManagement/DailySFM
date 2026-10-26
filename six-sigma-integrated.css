@@ -1,0 +1,56 @@
+/* Native DailySFM Six Sigma workbench. Scoped to iframe mode only. */
+body.embedded{--bg:#101b24;--sidebar:#101b24;--panel:#172530;--panel2:#1c2f3a;--border:#30424e;--text:#eff7fa;--muted:#acbdc7;--faint:#839aab;--green:#27d4b4;--blue:#7dc8e6;--amber:#f7c97a;--radius:12px;background:#101b24;color:var(--text);font-size:13px}
+body.embedded #app{display:block;min-height:100vh}
+body.embedded .side,body.embedded .topbar{display:none!important}
+body.embedded .main{display:block;width:100%;min-width:0;min-height:100vh}
+body.embedded .container{padding:18px 18px 48px;max-width:none;margin:0}
+body.embedded .headline{display:flex;gap:15px;align-items:flex-end;justify-content:space-between;margin:0 0 20px;flex-wrap:wrap}
+body.embedded .headline h1{font-size:23px;letter-spacing:-.35px;font-weight:650;margin:6px 0}
+body.embedded .headline p{color:#adbeca}
+body.embedded .eyebrow{color:#68d7bf;font-size:10px;letter-spacing:1.3px}
+body.embedded .panel{border-color:#30424e;box-shadow:none;background:#172630}
+body.embedded .panel-head h2{font-size:16px}
+body.embedded .stats .stat{background:#182935;border:1px solid #304451;border-radius:10px}
+body.embedded .stat b{color:#f2f8fc}
+body.embedded .btn{border-radius:8px;font-weight:650}
+body.embedded .btn.primary{background:#18a78f;color:#052421;border:1px solid #34cdb1}
+body.embedded .btn.outline{background:#192e39;border-color:#37505d;color:#d9e9f1}
+body.embedded .tool-tile{background:#1b303b;border:1px solid #304855;border-radius:10px}
+body.embedded .tool-tile.active{border-color:#25c7ac;background:#163c3b}
+body.embedded .project-card{border:1px solid #304956;background:#1a2e38;border-radius:10px}
+body.embedded .project-card:hover{border-color:#36baa7}
+body.embedded .tag{border-color:#42606a}
+body.embedded .tab.active{border-bottom-color:#25bfa5}
+body.embedded .callout{border-color:#2d5c57;background:#153732;color:#c7eee4}
+body.embedded .quiet-small,body.embedded .sub{color:#a0b4c1}
+body.embedded .grid-table{font-size:12px}
+body.embedded .grid-table th{background:#1a2d37;color:#c3d8e1}
+body.embedded input,body.embedded textarea,body.embedded select{background:#11222d;color:#e9f6fa;border-color:#38505c}
+body.embedded .modal{background:#142631;border:1px solid #405765}
+body.embedded .modal-backdrop{background:#05101acb}
+body.embedded .scroll{border-radius:9px}
+.dpm-sigma-intro{border:1px solid #315361;border-radius:13px;background:linear-gradient(105deg,#143339 0%,#172936 70%,#182635);padding:17px 19px 15px;margin-bottom:14px}
+.dpm-sigma-intro-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.dpm-sigma-intro .section-eyebrow{font-size:10px;color:#70dfca;letter-spacing:1.3px;font-weight:800}
+.dpm-sigma-intro h2{font-size:19px;margin:4px 0 6px;font-weight:700;letter-spacing:-.2px;color:#f3f8f9}
+.dpm-sigma-intro p{color:#a4bfcb;font-size:12px;margin:4px 0;max-width:780px}
+.dpm-sigma-state{display:flex;align-items:center;gap:8px;font-size:11px;background:#0e272e;border:1px solid #2c5460;border-radius:99px;padding:7px 11px;color:#a9f4e1;white-space:nowrap}
+.dpm-sigma-dot{width:7px;height:7px;border-radius:50%;background:#50c9ad}
+.dpm-import-controls{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:15px;padding-top:13px;border-top:1px solid #34535c}
+.dpm-import-controls label{display:grid;gap:5px;font-weight:650;font-size:11px;color:#bdcfd7;flex:1;min-width:190px;max-width:295px}
+.dpm-import-controls select{width:100%;border:1px solid #49707b;background:#132e38;color:white;border-radius:8px;padding:9px 10px;min-height:37px}
+.dpm-import-button{border:1px solid #44d0b6;background:#1caf97;color:#042f2b;padding:9px 13px;min-height:37px;font-weight:800;border-radius:8px;cursor:pointer}
+.dpm-import-button:hover{filter:brightness(1.12)}
+.dpm-import-button:disabled{opacity:.55;cursor:not-allowed}
+.dpm-context-note{color:#b0c4ce;font-size:11px;margin:10px 0 0;line-height:1.6}
+.dpm-workflow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:0 0 15px}
+.dpm-workflow button{border:1px solid #344c59;background:#172936;color:#b6cdd7;text-align:left;border-radius:9px;padding:10px 12px;cursor:pointer;min-height:72px}
+.dpm-workflow button:hover{border-color:#45c9b4;background:#1a383e}
+.dpm-workflow button strong{font-size:12px;display:block;color:#e6f4f5}
+.dpm-workflow button span{display:block;color:#9bb2bf;font-size:10px;margin-top:4px}
+.dpm-workflow button[data-selected="true"]{border-color:#40bfac;background:#183d40}
+.dpm-interpretation{border:1px solid #3e5d64;border-left:3px solid #64c9b2;padding:10px 13px;margin:0 0 16px;border-radius:8px;background:#142a31;font-size:12px;line-height:1.6;color:#c5d9e0}
+.dpm-interpretation b{color:#95ead9}
+.dpm-interpretation .warning{color:#f4d28e}
+@media(max-width:1050px){.dpm-workflow{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){body.embedded .container{padding:12px}.dpm-sigma-intro{padding:13px}.dpm-workflow{grid-template-columns:repeat(2,minmax(0,1fr))}.dpm-workflow button{min-height:62px}}
