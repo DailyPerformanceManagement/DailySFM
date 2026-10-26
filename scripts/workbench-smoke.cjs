@@ -82,10 +82,10 @@ async function createBrowser(){
    await frame.locator('#dpmKpiSelect').waitFor({timeout:20000});
    await frame.locator('#dpmKpiSelect').selectOption('qualitaet');
    await frame.locator('#dpmImportKpi').click();
-   await frame.locator('[data-tab="analysis"]').waitFor({timeout:8000});
-   await frame.locator('[data-tab="analysis"]').click();
+   await frame.locator('.tab[data-tab="analysis"]').waitFor({timeout:8000});
+   await frame.locator('.tab[data-tab="analysis"]').click();
    await frame.locator('.tool-tiles').waitFor();
-   await frame.locator('[data-tab="pfmea"]').first().click();
+   await frame.locator('.tab[data-tab="pfmea"]').click();
    await frame.locator('[data-action="add-fmea"]').first().click();
    const results=await frame.locator('body').evaluate(()=>{
      return {
