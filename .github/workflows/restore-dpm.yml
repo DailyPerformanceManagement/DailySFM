@@ -10,6 +10,11 @@ on:
       - "dailysfm-eacs.js"
       - "six-sigma.js"
       - "six-sigma.html"
+      - "dailysfm-modules.js"
+      - "dailysfm-modules.css"
+      - "six-sigma-integrated.css"
+      - "six-sigma-dpm-context.js"
+      - "scripts/workbench-smoke.cjs"
   workflow_dispatch:
 
 concurrency:
@@ -65,6 +70,13 @@ jobs:
 
       - name: Exercise mocked EACS KPI and Six Sigma saving in browser
         run: node scripts/eacs-smoke.cjs
+
+      - name: Validate native DailySFM Six Sigma integration
+        run: |
+          node --check dailysfm-modules.js
+          node --check six-sigma-dpm-context.js
+          node --check scripts/workbench-smoke.cjs
+          node scripts/workbench-smoke.cjs
 
       - name: Publish verified original to independent DailySFM only
         run: |
