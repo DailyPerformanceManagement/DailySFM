@@ -27,7 +27,7 @@
   const action = document.createElement('button');
   action.id = 'eacsAccount';
   action.type = 'button';
-  action.textContent = 'EACS anmelden';
+  action.textContent = 'EACS Cloud (optional)';
   Object.assign(action.style, {
     border:'1px solid #a4f1de', borderRadius:'6px', color:'#043a3c',
     background:'#d4fff1', padding:'5px 10px', cursor:'pointer', fontWeight:'700'
@@ -72,7 +72,7 @@
   const setAccount = user => {
     state.user = user;
     state.ready = !!user;
-    action.textContent = user ? ('✓ ' + (user.email||'EACS-Konto')) : 'EACS anmelden';
+    action.textContent = user ? ('✓ ' + (user.email||'EACS-Konto')) : 'Cloud speichern (optional)';
     syncButton.hidden = !user;
   };
   const saveSnapshot = async snapshot => {
@@ -165,11 +165,11 @@
     const pane = document.createElement('section');
     pane.style.cssText = 'background:#fff;color:#1b3442;border-radius:16px;max-width:410px;width:100%;padding:26px;font:14px/1.5 system-ui;box-shadow:0 18px 50px #0004';
     const heading = document.createElement('h2');
-    heading.textContent = state.user ? 'EACS-Konto' : 'Mit EACS verbinden';
+    heading.textContent = state.user ? 'EACS-Konto' : 'EACS Cloud-Speicherung (optional)';
     heading.style.margin = '0 0 12px';
     pane.append(heading);
     const info = document.createElement('p');
-    info.textContent = 'Die Anmeldung erfolgt bei Ihrem EACS Supabase-Projekt. Ihre KPI-Daten werden getrennt vom ursprünglichen B+K gespeichert.';
+    info.textContent = 'Zum Testen ist kein Login nötig. Nur für die Speicherung auf EACS benötigen Sie ein separates App-Login. Ihre originale B+K-Datenbank bleibt unberührt.';
     pane.append(info);
     const buttons = document.createElement('div');
     buttons.style.cssText = 'display:flex;gap:10px;margin-top:16px';
@@ -199,6 +199,50 @@
       pane.append(signed,msg);
       buttons.append(close,out);
     } else {
+      // Passwordless option for people who administer Supabase using Google.
+      // This sends a link to the user's own mailbox; it does NOT impersonate them.
+      const magicForm = document.createElement('form');
+      magicForm.style.cssText = 'display:grid;gap:9px;margin:14px 0';
+      const magicLabel = document.createElement('label');
+      magicLabel.textContent = 'Ohne Passwort per E-Mail anmelden';
+      magicLabel.style.fontWeight = '700';
+      const magicEmail = document.createElement('input');
+      magicEmail.type = 'email';
+      magicEmail.required = true;
+      magicEmail.placeholder = 'Ihre Gmail-Adresse';
+      magicEmail.autocomplete = 'email';
+      magicEmail.style.cssText = 'padding:10px;border:1px solid #cad8df;border-radius:8px;width:100%';
+      const magicButton = document.createElement('button');
+      magicButton.type = 'submit';
+      magicButton.textContent = 'Anmeldelink per E-Mail senden';
+      magicButton.style.cssText = 'padding:11px;border:0;border-radius:8px;background:#0a756b;color:white;font-weight:700;cursor:pointer';
+      const magicStatus = document.createElement('p');
+      magicStatus.setAttribute('role','status');
+      magicStatus.style.cssText = 'font-size:12px;margin:3px 0;color:#8b4b17';
+      magicForm.append(magicLabel, magicEmail, magicButton, magicStatus);
+      magicForm.addEventListener('submit', async event => {
+        event.preventDefault();
+        magicButton.disabled = true;
+        magicStatus.textContent = 'Anmeldelink wird angefordert …';
+        try {
+          const {error} = await state.client.auth.signInWithOtp({
+            email: magicEmail.value.trim(),
+            options: {emailRedirectTo: location.origin + location.pathname}
+          });
+          if (error) throw error;
+          magicStatus.textContent = 'E-Mail prüfen und den Anmeldelink öffnen. Falls die Rückleitung nicht klappt, in EACS die URL als Auth Redirect URL freigeben.';
+        } catch (error) {
+          magicStatus.textContent = 'EACS: ' + (error?.message || String(error));
+        } finally {
+          magicButton.disabled = false;
+        }
+      });
+      pane.append(magicForm);
+      const advanced = document.createElement('details');
+      const advancedSummary = document.createElement('summary');
+      advancedSummary.textContent = 'Alternativ: Mit E-Mail und Passwort anmelden';
+      advancedSummary.style.cssText = 'cursor:pointer;margin:12px 0;color:#486275';
+      advanced.append(advancedSummary);
       const form = document.createElement('form');
       form.style.cssText='display:grid;gap:12px';
       const email=document.createElement('input');
@@ -232,7 +276,8 @@
           msg.textContent='EACS: '+(error?.message||String(error));
         } finally {submit.disabled=false;}
       };
-      pane.append(form);
+      advanced.append(form);
+      pane.append(advanced);
       buttons.append(close);
     }
     pane.append(buttons);
@@ -252,7 +297,7 @@
     state.client.auth.getSession().then(async ({data,error})=>{
       if(error)throw error;
       if(data?.session?.user) await enterUser(data.session.user);
-      else {setAccount(null);show('Demo lokal · Bei EACS anmelden zum Cloud-Speichern');}
+      else {setAccount(null);show('Demo lokal · Login nur für Cloud-Speichern nötig');}
     }).catch(error=>{console.error('DailySFM EACS auth:',error);show('EACS Auth nicht erreichbar: '+error.message,true)});
   } catch(error) {console.error(error);show('EACS nicht erreichbar: '+error.message,true);action.disabled=true;}
 })();
