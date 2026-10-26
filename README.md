@@ -1,53 +1,60 @@
-# DailySFM — Claude DPM copy, connected to EACS
+# DailySFM — Shopfloor Management mit integriertem Six Sigma
 
-**Published dashboard:** https://dailyperformancemanagement.github.io/DailySFM/
+**Dashboard:** https://dailyperformancemanagement.github.io/DailySFM/
 
-**Source repository (this independent project):** https://github.com/DailyPerformanceManagement/DailySFM
+**Entwicklungsrepository:** https://github.com/DailyPerformanceManagement/DailySFM
 
-**Original Claude source (read-only):** https://github.com/DailyPerformanceManagement/DPM
+## Grundlage
 
-**Frozen upstream commit:** `267b7ec96800f87b0860d003b69793f700917b82`
+Diese Umgebung nutzt das **originale KPI Cockpit** als Oberfläche und Prozesslogik. Der Quellstand ist fixiert auf dem Commit `267b7ec96800f87b0860d003b69793f700917b82`; der reproduzierbare Import erfolgt über `scripts/import_dpm.py`.
 
-## What this project actually is
+## Arbeitsablauf
 
-- `index.html` is **the original Claude KPI Cockpit** (same dashboard layout, charts, daily KPI workflows, PDCA and problem solving), rebuilt from the pinned upstream commit by `scripts/import_dpm.py`.
-- Its **B+K Supabase client, publishable key, production host and login startup are removed** by the importer. It cannot reach the B+K database.
-- The original `projekte.html` improvement-project module is copied byte-for-byte from Claude. All 18 original screenshots are available under `hilfe/`.
-- The extra `six-sigma.html` studio provides editable datasets/columns, statistical tools and PFMEA.
+1. **Anmelden**: Beim ersten Öffnen erscheint der DailySFM-Anmeldedialog. Wer schon eine gültige EACS-Session besitzt, gelangt direkt ins Cockpit. Die E-Mail-Link-Anmeldung funktioniert ohne neues Passwort; die Zieladresse muss unter EACS Auth Redirect URLs zulässig sein.
+2. **Daily Management**: Tageswerte der sechs KPIs erfassen, Trends und Abweichungen bewerten.
+3. **Kennzahlen / Problemlösung**: Abweichung präzisieren und Ursache systematisch untersuchen.
+4. **Verbesserungsprojekte**: Bestehende Projektansicht beibehalten oder über den zweiten Tab **Six Sigma & PFMEA** öffnen.
+5. **Six Sigma**: Kennzahl auswählen, `KPI-Messwerte als neues Analyseprojekt` anklicken, Messwerte im Dateneditor prüfen, Statistik durchführen, PFMEA erfassen, Ergebnis speichern.
+6. **Maßnahmen und Wirksamkeit**: Verbesserung / Kontrollphase dokumentieren. Vorhandene Cockpit-Datensätze werden beim Import nicht verändert.
 
-## EACS cloud storage (not B+K)
+## Native Integration
 
-Project: **EACS / lean-command-center**, Frankfurt (`eu-central-1`)
+- `dailysfm-modules.js`, `dailysfm-modules.css`: Navigationseintrag, Projekt-/Six-Sigma-Untertab, Direktlinks von Kennzahlen und Problemlösung, sichere Übernahme gespeicherter Tagesmesswerte.
+- `six-sigma.html`, `six-sigma.css`, `six-sigma.js`: Eigener Dateneditor, CSV/JSON, deskriptive Statistik, Pareto, Pearson/Spearman, Regression, Histogramm, Jarque–Bera, t-Tests, ANOVA, Cp/Cpk/Pp/Ppk, I-MR und PFMEA.
+- `six-sigma-integrated.css`: Original-Dashboard-kompatible Ansicht innerhalb des Projektmoduls.
+- `six-sigma-dpm-context.js`: Eindeutiger DMAIC-Leitfaden und Import der echten gespeicherten KPI-Tagesdaten als neues Analyseprojekt.
+- `dailysfm-eacs.js`: Anmeldefenster beim Start und EACS-Cloudspeicherung. Kein störendes schwebendes Statusband.
+- `projekte.html`: Unverändertes Verbesserungsprojekt-Modul der Vorlage, weiter über den Portfolio-Tab erreichbar.
 
-Supabase URL: `https://gibsgwfuvuxfgicpvybm.supabase.co`
+## Messdaten und Interpretation
 
-- Original KPI Cockpit -> `public.dailysfm_workspaces` (private user-owned JSONB snapshots)
-- Six Sigma Studio -> `public.sigma_projects` (separate user-owned records)
-- Both use Supabase Authentication + row-level security. **Only the browser-safe publishable key** is bundled into frontend code, never any service-role secrets.
-- `supabase/eacs_dailysfm_workspaces.sql` documents the database table and its four RLS policies (already applied to EACS).
+Die 6 KPI-Reihen enthalten **Tagesaggregate**, keine Einzelteilmessungen. Für sinnvolle Six-Sigma-Entscheidungen sind reale Rohmessungen, Messsystembetrachtung und passende Nenner nötig:
 
-## How to use
+- Prozentwerte allein liefern noch keine p-Regelkarte (dazu werden Anzahl fehlerhafter und insgesamt geprüfter Einheiten benötigt).
+- Unfälle, Fehlteile und Lagerbestände sind Zähl-/Bestandsdaten; I-MR ist dafür nicht pauschal geeignet.
+- Cp/Cpk nur für kontinuierliche Messwerte mit **real festgelegten** oberen/unteren Spezifikationsgrenzen und ausreichender Prozessstabilität interpretieren.
+- PFMEA-RPN ist ein einfacher S×O×D-Risikoindikator und **keine normative AIAG-VDA Action-Priority-Klassifikation**.
+- Ein Datenimport erzeugt **immer ein neues Six-Sigma-Projekt**; die KPI-Quelldaten bleiben unberührt.
+- Tabellen lassen sich beliebig umbenennen und bearbeiten; Messgrößen, Fehlertypen, Schichten, Nenner und Rohmessungen können ergänzt werden.
 
-1. Open the [DailySFM KPI Cockpit](https://dailyperformancemanagement.github.io/DailySFM/).
-2. In the bottom status strip choose **EACS anmelden** and sign in with an **EACS account**, or register a new one.
-3. If email confirmation is required, confirm it and return to the dashboard. You may need to add the published DailySFM URL to EACS **Auth → URL Configuration → Redirect URLs**, depending on your email setup.
-4. After sign-in, the original cockpit begins a **new, empty EACS workspace**. Any old browser demo measurements are backed up locally, *not automatically imported* into EACS.
-5. Daily KPI changes are automatically saved to the EACS table. Use **Jetzt speichern** to trigger an immediate save.
-6. In [Six Sigma Studio](https://dailyperformancemanagement.github.io/DailySFM/six-sigma.html), sign in with the same EACS account to manage cloud projects.
+## Cloud
 
-## Known limitations / safety
+- Projekt: EACS Supabase, Frankfurt.
+- Cockpit: `public.dailysfm_workspaces`, nutzerbezogene Snapshots.
+- Studio: `public.sigma_projects`, nutzerbezogene Analyseprojekte.
+- Zugang: Supabase Auth; beide Tabellen nutzen Row-Level Security (RLS).
+- Das ursprüngliche Cockpit nutzt einen kompakteren Snapshot-Adapter, nicht alle früheren Backends wie Chat, Kalender oder Benachrichtigungen sind schon auf EACS migriert. Bei solchen Modulen werden Einschränkungen angezeigt.
 
-- The original DPM application was built for a **different B+K schema**. This first EACS bridge saves/restores the original cockpit's overall local state as an authenticated snapshot; it does **not** migrate its numerous underlying B+K tables, chat/calendar integrations, user roles or notifications to EACS.
-- The original DPM dashboard contains fictional starting values in **guest/demo mode**. They do not silently become cloud data. A newly authenticated EACS workspace starts empty.
-- Browser storage can contain a local offline backup; signed-in state is private in EACS but browser data should still be protected on shared computers.
-- The public app does **not** query or mutate production B+K data.
-- Authentication, signup email confirmation and cross-device cloud persistence require an actual EACS user account to test end to end. CI currently tests simulated sign-in/save behavior and database policy/grant configuration. It does not create users or write test data to the EACS project.
+## Qualitätssicherung
 
-## Testing and reproducibility
+GitHub Actions `.github/workflows/restore-dpm.yml` testet vor der Freigabe:
 
-- The `restore-dpm.yml` GitHub Actions workflow fetches the pinned Claude source, checks its Git blob SHA, removes the B+K client, runs syntax and Playwright smoke tests, and commits the resulting site **only into DailySFM**.
-- `scripts/eacs-smoke.cjs` checks both EACS save pathways with mocked auth/network (no production writes).
-- `scripts/import_dpm.py` retains the original UI while changing the cloud connection. It is safe to rerun because the pinned SHA is checked.
-- To develop locally: `python3 scripts/import_dpm.py`, then `python3 -m http.server 8000`.
+- Quellstand und JavaScript-Syntax
+- Browser-Start und Anmeldeseite
+- kein sichtbares Statusband
+- originale Navigation und Six-Sigma-Einbettung
+- sichere Übernahme von KPI-Tageswerten ohne Veränderung der Quell-Messreihe
+- Analyse- und PFMEA-Bedienung
+- EACS-Speicherpfade mit simulierten Nutzern
 
-Original `DPM` and B+K are intentionally left untouched.
+Die Browser-Smoke-Tests verwenden **Mock-Authentifizierung**; für einen vollständigen Real-World-Cloudtest braucht es die Sitzung eines echten EACS-Nutzers.
